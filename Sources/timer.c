@@ -9,11 +9,9 @@ void init_tim4(void)
 	//Desired Timer Frequency =  Timer Input Frequency / (Prescaler * Period) 
 	//Desired = 2KHz
 	//Timer Input Frequency = 84MHz
-	//tim4_init.Prescaler = 21;
-	tim4_init.Prescaler = 999;
+	tim4_init.Prescaler = 21;
 	tim4_init.CounterMode = TIM_COUNTERMODE_UP;
-	//tim4_init.Period = 2000;
-	tim4_init.Period = 83;
+	tim4_init.Period = 2000;
 	tim4_init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	
 	tim4_handle.Instance = TIM4;

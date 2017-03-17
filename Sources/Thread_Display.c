@@ -15,18 +15,33 @@ int start_Thread_Display(void)
 void Thread_Display(void const *argument)
 {
 	float temp2display = 0;
+	float pitch2display = 0;
+	float roll2display = 0;
 	
 	while(1)
 	{
 		osDelay(10);
 		
-		displayTemp(26.5);
-		
-		osMutexWait(temp_mutex, osWaitForever);
+		/*osMutexWait(temp_mutex, osWaitForever);
 		temp2display = temp_data;
-		osMutexRelease(temp_mutex);
+		osMutexRelease(temp_mutex);*/
 		
-		//displayTemp(26.5);
+		osMutexWait(accel_mutex, osWaitForever);
+		roll2display = roll_value;
+		osMutexRelease(accel_mutex);
+		
+		/*if(temp2display >= TEMP_LIMIT)
+		{
+			osDelay(20);
+			displayTemp(temp2display);
+			reset_LED();
+		}
+		else
+		{
+			displayTemp(temp2display);
+		}*/
+		
+		displayTemp(roll2display);
 	}
 }
 
@@ -62,18 +77,19 @@ void displayTemp(float temp)
 	display[1] = (int) (temp - display[2]*10);
 	display[0] = (int) ((temp*10) - display[2]*100 - display[1]*10);
 	
-	if(temp == 0)
+	/*if(temp == 0)
 	{
 		display[3] = 10;
 		display[2] = 10;
 		display[1] = 10;
 		display[0] = 10;
-	}	
+	}*/
 	
 	for(i = 0; i < 4 ; i++)
 	{
 		set_digit(i);
 		set_LED(display[i]);
+		osDelay(2);
 	}
 }
 
@@ -237,7 +253,10 @@ void set_LED(int segment)
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET); //Pin e
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET); //Pin f
 			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET); //Pin g
-      break;					
+      break;			
+
+		default:
+			break;
 	}		
 }
 

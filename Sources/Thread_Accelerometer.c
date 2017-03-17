@@ -40,8 +40,8 @@ void Thread_Accelerometer(void const *argument)
 	{
 		osSignalWait(ACCEL_READY_SIGNAL, osWaitForever);
 		
-		calibrate_accel_data(accel_data);
 		osMutexWait(accel_mutex, osWaitForever);
+		calibrate_accel_data(accel_data);
 		pitch_value = calc_pitch(accel_data);
 		roll_value = calc_roll(accel_data);
 		osMutexRelease(accel_mutex);
@@ -53,6 +53,7 @@ void init_accel(void)
 {
 	LIS3DSH_InitTypeDef accel_init;
 	LIS3DSH_DRYInterruptConfigTypeDef accel_it_config;
+	GPIO_InitTypeDef GPIOE_init;
 	
 	//Initialize accelerometer parameters
 	accel_init.Power_Mode_Output_DataRate = LIS3DSH_DATARATE_25;
@@ -66,6 +67,15 @@ void init_accel(void)
 	accel_it_config.Dataready_Interrupt = LIS3DSH_DATA_READY_INTERRUPT_ENABLED;
 	accel_it_config.Interrupt_signal = LIS3DSH_ACTIVE_HIGH_INTERRUPT_SIGNAL;
 	accel_it_config.Interrupt_type = LIS3DSH_INTERRUPT_REQUEST_PULSED;
+	
+	//Initialize GPIOE
+	GPIOE_init.Pin = GPIO_PIN_0;
+	GPIOE_init.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIOE_init.Pull = GPIO_NOPULL;
+	GPIOE_init.Speed = GPIO_SPEED_FREQ_HIGH;
+	
+	__HAL_RCC_GPIOE_CLK_ENABLE();
+	HAL_GPIO_Init(GPIOE, &GPIOE_init);
 	
 	//Initialize function from drivers
 	LIS3DSH_Init(&accel_init);

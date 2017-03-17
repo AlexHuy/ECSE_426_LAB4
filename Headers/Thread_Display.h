@@ -13,6 +13,8 @@ GPIO_PIN_4 is segment E
 GPIO_PIN_5 is segment F
 GPIO_PIN_6 is segment G*/
 
+#define TEMP_LIMIT 25.5
+
 void displayTemp(float temp);
 void set_LED(int segment);
 void set_digit(int digit);
