@@ -3,6 +3,7 @@
 
 #define PI 										3.14159265359
 #define ACCEL_READY_SIGNAL 		1
+#define TEMP_READY_SIGNAL			2
 #define Avg_Slope 	          25
 #define V_25									760
 

@@ -24,6 +24,8 @@ void Thread_Temperature(void const *argument)
 {
 	while(1)
 	{
+		osSignalWait(TEMP_READY_SIGNAL, osWaitForever);
+		
 		read_temp();
 	}
 }

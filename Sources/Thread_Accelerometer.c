@@ -22,9 +22,10 @@ void Thread_Accelerometer(void const *argument);
 osThreadId tid_Thread_Accel;                            
 osThreadDef(Thread_Accelerometer, osPriorityNormal, 1, 0);
 
+//Create the thread for the accelerometer
 int start_Thread_Accelerometer(void)
 {
-	tid_Thread_Accel = osThreadCreate(osThread(Thread_Accelerometer ), NULL); // Start LED_Thread
+	tid_Thread_Accel = osThreadCreate(osThread(Thread_Accelerometer ), NULL); 
   if (!tid_Thread_Accel) return(-1); 
   return(0);
 }
