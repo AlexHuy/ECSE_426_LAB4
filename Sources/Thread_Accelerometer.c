@@ -22,6 +22,9 @@ void Thread_Accelerometer(void const *argument);
 osThreadId tid_Thread_Accel;                            
 osThreadDef(Thread_Accelerometer, osPriorityNormal, 1, 0);
 
+osMutexId accel_mutex;
+osMutexDef(accel_mutex);
+
 //Create the thread for the accelerometer
 int start_Thread_Accelerometer(void)
 {
@@ -38,8 +41,10 @@ void Thread_Accelerometer(void const *argument)
 		osSignalWait(ACCEL_READY_SIGNAL, osWaitForever);
 		
 		calibrate_accel_data(accel_data);
+		osMutexWait(accel_mutex, osWaitForever);
 		pitch_value = calc_pitch(accel_data);
 		roll_value = calc_roll(accel_data);
+		osMutexRelease(accel_mutex);
 	}
 }
 
@@ -69,6 +74,8 @@ void init_accel(void)
 	//Enable IRQ for accelerometer and set its priority
 	HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 	HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+	
+	accel_mutex = osMutexCreate(osMutex(accel_mutex));
 	
 	/*coeff.b0 = 0.1;
 	coeff.b1 = 0.15;

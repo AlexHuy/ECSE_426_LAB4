@@ -12,6 +12,9 @@ void Thread_Temperature(void const *argument);
 osThreadId tid_Thread_Temp;                            
 osThreadDef(Thread_Temperature, osPriorityNormal, 1, 0);
 
+osMutexId temp_mutex;
+osMutexDef(temp_mutex);
+
 int start_Thread_Temperature(void)
 {
 	tid_Thread_Temp = osThreadCreate(osThread(Thread_Temperature ), NULL); 
@@ -63,7 +66,9 @@ void init_temp(void)
 	HAL_ADC_ConfigChannel(&ADC1_Handle, &ADC1_Channel);
 	HAL_ADC_Start(&ADC1_Handle);
 	
-		/*coeff.b0 = 0.1;
+	temp_mutex = osMutexCreate(osMutex(temp_mutex));
+	
+	/*coeff.b0 = 0.1;
 	coeff.b1 = 0.15;
 	coeff.b2 = 0.5;
 	coeff.b3 = 0.15;
@@ -84,5 +89,8 @@ void read_temp(void)
 	float adc_data;
 	
 	adc_data = HAL_ADC_GetValue(&ADC1_Handle);
+	
+	osMutexWait(temp_mutex, osWaitForever);
 	temp_data = convertToTemp(adc_data);
+	osMutexRelease(temp_mutex);
 }
