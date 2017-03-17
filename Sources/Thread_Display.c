@@ -20,11 +20,13 @@ void Thread_Display(void const *argument)
 	{
 		osDelay(10);
 		
+		displayTemp(26.5);
+		
 		osMutexWait(temp_mutex, osWaitForever);
 		temp2display = temp_data;
 		osMutexRelease(temp_mutex);
 		
-		displayTemp(temp2display);
+		//displayTemp(26.5);
 	}
 }
 
@@ -42,6 +44,9 @@ void init_display(void)
 	GPIOC_init.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIOC_init.Pull = GPIO_NOPULL;
 	GPIOC_init.Speed = GPIO_SPEED_FREQ_HIGH;
+	
+	__HAL_RCC_GPIOA_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
 	
 	HAL_GPIO_Init(GPIOA, &GPIOA_init);
 	HAL_GPIO_Init(GPIOC, &GPIOC_init);
@@ -102,6 +107,9 @@ void set_digit(int digit)
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_1, GPIO_PIN_RESET); 
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_2, GPIO_PIN_RESET); 				
 			HAL_GPIO_WritePin(GPIOC, GPIO_PIN_3, GPIO_PIN_RESET);
+			break;
+		
+		default:
 			break;
 	}
 }

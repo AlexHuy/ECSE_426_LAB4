@@ -18,4 +18,6 @@ extern float roll_value, pitch_value;
 extern osMutexId temp_mutex;
 extern osMutexId accel_mutex;
 
+extern TIM_HandleTypeDef tim4_handle;
+
 #endif

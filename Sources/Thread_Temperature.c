@@ -36,7 +36,7 @@ void Thread_Temperature(void const *argument)
 void init_temp(void)
 {
 	//Initialize ADC_InitTypeDef instance
-	ADC1_Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+	ADC1_Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
 	ADC1_Init.Resolution = ADC_RESOLUTION_12B;
 	ADC1_Init.DataAlign = ADC_DATAALIGN_RIGHT;
 	ADC1_Init.ScanConvMode = DISABLE;

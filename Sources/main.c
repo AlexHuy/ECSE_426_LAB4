@@ -29,15 +29,16 @@ extern void start_Thread_Temperature(void);
 extern void Thread_Temperature(void const *argument);
 extern osThreadId tid_Thread_Temp;
 
-/*extern void init_display(void);
+extern void init_display(void);
 extern void start_Thread_Display(void);
 extern void Thread_Display(void const *argument);
 extern osThreadId tid_Thread_Display;
 
-extern void init_keypad(void);
+/*extern void init_keypad(void);
 extern void start_Thread_Keypad(void);
 extern void Thread_Keypad(void const *argument);
 extern osThreadId tid_Thread_Keypad;*/
+
 /**
 	These lines are mandatory to make CMSIS-RTOS RTX work with te new Cube HAL
 */
@@ -85,6 +86,16 @@ void SystemClock_Config(void) {
   HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 }
 
+void EXTI0_IRQHandler(void)
+{
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+}
+
+void TIM4_IRQHandler(void)
+{
+	HAL_TIM_IRQHandler(&tim4_handle);
+}  
+
 /**
   * Main function
   */
@@ -106,10 +117,10 @@ int main (void) {
 	init_temp();
 	start_Thread_Temperature();
 	
-	/*init_display();
+	init_display();
 	start_Thread_Display();
 	
-	init_keypad();
+	/*init_keypad();
 	start_Thread_Keypad();*/
 	/* User codes ends here*/
 	osKernelStart();                          /* start thread execution         */
@@ -126,6 +137,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	if(htim->Instance == TIM4)
+	UNUSED(htim);
+	
+	if(htim == &tim4_handle)
+	{
 		osSignalSet(tid_Thread_Temp, TEMP_READY_SIGNAL);
+	}
 }
