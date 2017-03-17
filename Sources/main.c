@@ -108,6 +108,8 @@ int main (void) {
   SystemClock_Config();                     /* Configure the System Clock     */
 
 	/* User codes goes here*/
+	init_tim4();
+	
   initializeLED_IO();                       /* Initialize LED GPIO Buttons    */
   start_Thread_LED();                       /* Create LED thread              */
 	
@@ -132,6 +134,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	{
 		LIS3DSH_ReadACC(accel_data);
 		osSignalSet(tid_Thread_Accel, ACCEL_READY_SIGNAL);
+		//test_flag++;
 	}
 }
 

@@ -22,9 +22,9 @@ void Thread_Display(void const *argument)
 	{
 		osDelay(10);
 		
-		/*osMutexWait(temp_mutex, osWaitForever);
+		osMutexWait(temp_mutex, osWaitForever);
 		temp2display = temp_data;
-		osMutexRelease(temp_mutex);*/
+		osMutexRelease(temp_mutex);
 		
 		osMutexWait(accel_mutex, osWaitForever);
 		roll2display = roll_value;
@@ -40,8 +40,16 @@ void Thread_Display(void const *argument)
 		{
 			displayTemp(temp2display);
 		}*/
-		
-		displayTemp(roll2display);
+			if(temp2display >= TEMP_LIMIT)
+		{
+			osDelay(20);
+			displayTemp(fabs(roll2display));
+			reset_LED();
+		}
+		else
+		{
+			displayTemp(fabs(roll2display));
+		}
 	}
 }
 
